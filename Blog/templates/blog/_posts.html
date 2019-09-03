@@ -1,0 +1,28 @@
+{% if posts %}
+    {% for post in posts %}
+        <h3 class="text-primary"><a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a></h3>
+        <p>
+            {% if post.body_html %}
+                {{ post.body_html | safe |striptags|truncate }}
+            {% else %}
+                {{ post.body|striptags|truncate }}
+            {% endif %}
+            <small><a href="{{ url_for('.show_post', post_id=post.id) }}">Read More</a></small>
+        </p>
+        <small>
+            Comments: <a href="{{ url_for('.show_post', post_id=post.id) }}#comments">{{ post.comments|length }}</a>&nbsp;&nbsp;
+            Category: <a href="\">{{ post.category.name }}</a>&nbsp;&nbsp;
+            Time: <a href="#">{{ moment(post.timestamp).format('LL') }}</a>
+        </small>
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="tip">
+        <h5>No posts yet.</h5>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('admin.new_post') }}">Write Now</a>
+        {% endif %}
+    </div>
+{% endif %}

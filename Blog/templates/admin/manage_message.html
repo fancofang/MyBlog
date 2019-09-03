@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}Manage Messages{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Messages
+            <small class="text-muted">{{ pagination.total }}</small>
+        </h1>
+    </div>
+    {% if messages %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>Author</th>
+                <th>Comment</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ loop.index + ((pagination.page - 1) * config['BLOG_COMMENT_PER_PAGE']) }}</td>
+                    <td>{{ message.name }}</td>
+                    <td>{{ message.body }}</td>
+                    <td>{{ moment(message.timestamp).format('LL') }}</td>
+                    <td>
+                        <form class="inline" method="post"
+                              action="{{ url_for('admin.delete_message', message_id=message.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure?');">Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="page-footer">{{ render_pagination(pagination) }}</div>
+    {% else %}
+        <div class="tip"><h5>No messages.</h5></div>
+    {% endif %}
+{% endblock %}

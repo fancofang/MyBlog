@@ -1,0 +1,11 @@
+    <div class="card mb-3">
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('blog.search') }}">
+            <input type="text" name="q" class="form-control form-control-search" placeholder="Post or category"
+                   required>
+            <button class="btn btn-light-search" type="submit">
+                <span class="oi oi-magnifying-glass"></span>
+            </button>
+        </form>
+    </div>
+
+

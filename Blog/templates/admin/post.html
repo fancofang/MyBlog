@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+
+{% block title %}{% if form.title.data %} Edit {% else %} New {% endif %}Post{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{% if form.title.data %} Edit {% else %} New {% endif %}Post</h1>
+    </div>
+    {{ render_form(form) }}
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
+
+

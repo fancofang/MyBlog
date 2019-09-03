@@ -1,0 +1,106 @@
+nav {
+    margin-bottom: 20px;
+}
+
+.inline {
+    display: inline;
+}
+
+.page-header {
+    padding-bottom: 20px;
+}
+
+.comments {
+    margin: 20px 0;
+}
+
+.reply-body {
+    margin-top: 10px;
+}
+
+.sidebar {
+    padding-left: 30px;
+}
+
+.main {
+    min-height:calc(100vh - 155px);
+}
+
+footer {
+    margin-top: 30px;
+    padding: 10px 0 40px 20px;
+    color: #999;
+    border-top: 1px solid #e5e5e5;
+}
+
+.page-footer {
+    padding-top: 40px;
+}
+
+.tip { /* from github.com */
+    color: black !important;
+    position: relative;
+    padding: 40px;
+    text-align: center;
+    background-color: #fafbfc;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+    box-shadow: inset 0 0 10px rgba(27, 31, 35, 0.05);
+}
+
+
+.pure-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.pure-img-responsive {
+    border-radius:100%;
+}
+
+@media (max-width: 575px){
+    .col-sm-2 {
+        display:none;
+    }
+}
+
+@media (max-width: 992px){
+    .dropdown-menu {
+        background:#2780E3;
+        border:none;
+    }
+    .dropdown-item {
+        color:#fff;
+    }
+    .img-display {
+        display:none;
+    }
+}
+
+.form-control-search{
+    width:100% !important;
+    border: none;
+    background: transparent;
+}
+
+.btn-light-search {
+    position: absolute;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    right:0;
+
+}
+
+textarea{
+    height: 250px;
+}
+
+.reply {
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 0 solid transparent;
+}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="container h-100">
+        <div class="row h-100 page-header justify-content-center align-items-center">
+            <h1>Log in</h1>
+        </div>
+        <div class="row h-100 justify-content-center align-items-center">
+            {{ render_form(form, extra_classes='col-6') }}
+        </div>
+        <hr>
+        <div class="row justify-content-center ">
+            <a href="{{ url_for('.forget_password') }}">Forget password? </a>
+        </div>
+        <div class="row justify-content-center ">
+            <a href="{{ url_for('.register') }}">Register new account.</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
