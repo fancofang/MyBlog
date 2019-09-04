@@ -42,6 +42,8 @@ class BaseConfig(object):
     DROPZONE_MAX_FILES = 5
     DROPZONE_ENABLE_CSRF = True
 
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
+
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')
 

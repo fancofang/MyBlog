@@ -9,6 +9,7 @@ from flask_whooshee import Whooshee
 from flask_pagedown import PageDown
 from flask_dropzone import Dropzone
 from flask_migrate import Migrate
+from flask_debugtoolbar import DebugToolbarExtension
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -20,6 +21,7 @@ whooshee = Whooshee()
 pagedown = PageDown()
 dropzone = Dropzone()
 migrate = Migrate()
+toolbar = DebugToolbarExtension()
 
 
 

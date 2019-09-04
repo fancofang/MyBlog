@@ -7,7 +7,7 @@ from flask_wtf.csrf import CSRFError
 from Blog.blueprints.auth import auth_bp
 from Blog.blueprints.blog import blog_bp
 from Blog.blueprints.admin import admin_bp
-from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, pagedown, dropzone, migrate
+from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, pagedown, dropzone, migrate, toolbar
 from Blog.models import User, Post, Category, Comment, Permission, Role
 from Blog.configs import config
 
@@ -48,6 +48,7 @@ def register_extensions(app):
     pagedown.init_app(app)
     dropzone.init_app(app)
     migrate.init_app(app, db)
+    toolbar.init_app(app)
 
 
 def register_errors(app):

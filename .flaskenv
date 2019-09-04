@@ -1,2 +1,3 @@
 FLASK_APP=Blog
 FLASK_ENV=development
+FLASK_CONFIG=production

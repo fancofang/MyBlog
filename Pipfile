@@ -27,6 +27,7 @@ gunicorn = "*"
 psycopg2 = "*"
 bootstrap-flask = "*"
 flask-migrate = "*"
+flask-debugtoolbar = "*"
 
 [requires]
 python_version = "3.7"
