@@ -55,16 +55,20 @@ def show_post(post_id):
 	comments = pagination.items
 	form = CommentForm()
 	if form.validate_on_submit():
-		body = form.body.data
-		author = current_user
-		comment = Comment(body=body, post=post, author= author)
-		replied_id = request.args.get('reply')
-		if replied_id:
-			replied_comment = Comment.query.get_or_404(replied_id)
-			comment.replied = replied_comment
-		db.session.add(comment)
-		db.session.commit()
-		return redirect(url_for('.show_post', post_id=post_id))
+		if current_user.is_authenticated:
+			body = form.body.data
+			author = current_user
+			comment = Comment(body=body, post=post, author= author)
+			replied_id = request.args.get('reply')
+			if replied_id:
+				replied_comment = Comment.query.get_or_404(replied_id)
+				comment.replied = replied_comment
+			db.session.add(comment)
+			db.session.commit()
+			return redirect(url_for('.show_post', post_id=post_id))
+		else:
+			flash('Please login first.', 'warning')
+			return redirect(url_for('auth.login'))
 	return render_template('blog/post.html', pagination=pagination, post=post, comments=comments, form=form)
 
 @blog_bp.route('/reply/comment/<int:comment_id>')

@@ -24,6 +24,7 @@ class BaseConfig(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = ('Fanco', 'noreply@fanco.ink')
     MAIL_SUBJECT_PREFIX = '[Fanco`s study room]'
+    ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')
 
     BLOG_ADMIN_EMAIL = 'admin@example.com'
     BLOG_POST_PER_PAGE = 10
