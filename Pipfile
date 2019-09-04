@@ -23,10 +23,10 @@ werkzeug = "==0.15.4"
 flask-pagedown = "*"
 flask-dropzone = "*"
 faker = "*"
-flask-migrate = "*"
 gunicorn = "*"
 psycopg2 = "*"
 bootstrap-flask = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.7"
