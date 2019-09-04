@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import flask_dropzone
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_mail import Mail

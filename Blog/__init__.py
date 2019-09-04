@@ -1,5 +1,7 @@
 import os
 import click
+import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask,render_template
 from flask_wtf.csrf import CSRFError
 from Blog.blueprints.auth import auth_bp
@@ -8,6 +10,8 @@ from Blog.blueprints.admin import admin_bp
 from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, pagedown, dropzone, migrate
 from Blog.models import User, Post, Category, Comment, Permission, Role
 from Blog.configs import config
+
+
 
 
 
@@ -24,6 +28,7 @@ def create_app(config_name=None):
     register_errors(app)
     register_template_context(app)
     register_blueprints(app)
+    register_logger(app)
     return app
 
 def register_blueprints(app):
@@ -42,7 +47,7 @@ def register_extensions(app):
     whooshee.init_app(app)
     pagedown.init_app(app)
     dropzone.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app,db)
 
 
 def register_errors(app):
@@ -162,3 +167,18 @@ def register_commands(app):
         fake_messages(message)
 
         click.echo('Done.')
+
+
+
+
+
+def register_logger(app):
+    app.logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    file_handler = RotatingFileHandler('logs/Blog.log', maxBytes=10 * 1024 *1024, backupCount=10)
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+
+    if not app.debug:
+        app.logger.addHandler(file_handler)

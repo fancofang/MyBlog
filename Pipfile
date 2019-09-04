@@ -5,18 +5,17 @@ verify_ssl = true
 
 [dev-packages]
 faker = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 flask = "*"
 python-dotenv = "*"
 bleach = "*"
 flask-login = "*"
-flask-bootstrap = "*"
 flask-sqlalchemy = "*"
 flask-mail = "*"
 flask-moment = "*"
 flask-wtf = "*"
-bootstrap-flask = "*"
 markdown = "==2.6.8"
 markdown2 = "*"
 flask-whooshee = "*"
@@ -26,6 +25,8 @@ flask-dropzone = "*"
 faker = "*"
 flask-migrate = "*"
 gunicorn = "*"
+psycopg2 = "*"
+bootstrap-flask = "*"
 
 [requires]
 python_version = "3.7"

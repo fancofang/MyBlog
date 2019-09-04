@@ -10,6 +10,7 @@
         {% block styles %}
             <link rel="stylesheet"
                   href="{{ url_for('static', filename='css/perfect_blue.min.css') }}" type="text/css">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/github.css') }}" type="text/css">
             <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}">
@@ -86,13 +87,10 @@
 {% endblock footer %}
 
 {% block scripts %}
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
     <script type="text/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
-
     {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
 {% endblock %}
 </body>
