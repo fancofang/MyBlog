@@ -28,6 +28,7 @@ psycopg2 = "*"
 bootstrap-flask = "*"
 flask-migrate = "*"
 flask-debugtoolbar = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

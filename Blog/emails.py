@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import requests
 from threading import Thread
 
 from flask import current_app, render_template
@@ -25,5 +26,10 @@ def send_reset_password_email(user, token):
     send_mail(subject='Password Reset', to=user.email, template='emails/reset_password', user=user, token=token)
 
 
-def send_comment_email(user, token):
-    send_mail(subject='Your post has a new comment', to=user.email, template='emails/reset_password', user=user, token=token)
+# def send_comment_email(user, token):
+#     send_mail(subject='Your post has a new comment', to=user.email, template='emails/reset_password', user=user, token=token)
+
+def send_someone_connect_email(user_email, ip):
+    send_mail(subject='Your website has a new visitor', to=user_email, template='emails/visitor_ip', ip=ip)
+
+

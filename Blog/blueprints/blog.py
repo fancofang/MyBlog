@@ -1,15 +1,22 @@
-from flask import Blueprint,render_template, request, current_app, flash, redirect, url_for
+from flask import Blueprint,render_template, request, current_app, flash, redirect, url_for, session
 from flask_login import current_user
 from Blog.models import Post, Category, Comment, User, Message
-from Blog.utils import redirect_back
+from Blog.utils import redirect_back, get_current_ip
 from Blog.form import HelloForm
 from Blog.extensions import db
 from Blog.form import CommentForm
+from Blog.emails import send_someone_connect_email
 
 blog_bp = Blueprint('blog', __name__)
 
 @blog_bp.route('/', methods=['GET', 'POST'])
 def index():
+	if current_user.is_authenticated:
+		ip = get_current_ip()
+		if ip != session.get('ip'):
+			session['ip'] = get_current_ip()
+			send_someone_connect_email('fanghao23@hotmail.com', ip)
+
 	last = Post.query.order_by(Post.timestamp.desc()).first()
 	form = HelloForm()
 	if form.validate_on_submit():

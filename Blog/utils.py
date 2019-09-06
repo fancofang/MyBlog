@@ -4,7 +4,8 @@ try:
 except ImportError:
     from urllib.parse import urlparse, urljoin
 
-import os, uuid
+import os, uuid, re
+from urllib.request import urlopen
 from functools import wraps
 from flask_login import current_user
 from flask import request, redirect, url_for,current_app, abort
@@ -77,5 +78,12 @@ def permission_required(permission_name):
             return func(*args, **kwargs)
         return decorated_function
     return decorator
+
+def get_current_ip():
+    html = urlopen('http://checkip.dyndns.org/').read()
+    raw = html.decode('utf-8')
+    ip_addr = re.findall('\d+\.\d+\.\d+\.\d+', raw)
+    return ip_addr
+
 
 

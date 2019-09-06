@@ -22,7 +22,7 @@ class BaseConfig(object):
     MAIL_USE_TSL = True
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = ('Fanco', 'noreply@fanco.ink')
+    MAIL_DEFAULT_SENDER = ('Fanco', 'noreply@blog.fanco.ink')
     MAIL_SUBJECT_PREFIX = '[Fanco`s study room]'
     ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')
 
