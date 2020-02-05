@@ -79,11 +79,11 @@ def permission_required(permission_name):
         return decorated_function
     return decorator
 
-def get_current_ip():
-    html = urlopen('http://checkip.dyndns.org/').read()
-    raw = html.decode('utf-8')
-    ip_addr = re.findall('\d+\.\d+\.\d+\.\d+', raw)
-    return ip_addr
+# def get_current_ip():
+#     html = urlopen('http://checkip.dyndns.org/').read()
+#     raw = html.decode('utf-8')
+#     ip_addr = re.findall('\d+\.\d+\.\d+\.\d+', raw)
+#     return ip_addr
 
 
 
