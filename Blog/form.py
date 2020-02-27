@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, ValidationError, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, ValidationError, TextAreaField, DateTimeField
 from flask_pagedown.fields import PageDownField
 from wtforms.validators import DataRequired,Length, Email, Regexp, EqualTo
 from Blog.models import Category, User
+from flask_ckeditor import CKEditorField
 
 class LoginForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Length(1, 254), Email()])
@@ -12,8 +13,10 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
 	title = StringField('Title', validators=[DataRequired(), Length(1.128)])
+	uploadtime = StringField('Uploadtime(Just valid on edit)')
 	category = SelectField('Category', coerce=int, default=1)
-	body = PageDownField('Body', validators=[DataRequired()])
+	# body = PageDownField('Body', validators=[DataRequired()])
+	body = CKEditorField('Body', validators=[DataRequired()])
 	submit = SubmitField('Submit')
 	cancel = SubmitField('Cancel')
 

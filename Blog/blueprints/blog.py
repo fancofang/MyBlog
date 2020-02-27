@@ -32,6 +32,8 @@ def index():
 	page = request.args.get('page', 1, type=int)
 	per_page = current_app.config['MESSAGE_PER_PAGE']
 	pagination = Message.query.order_by(Message.timestamp.desc()).paginate(page, per_page=per_page)
+	a = Message.query.order_by(Message.timestamp.desc())
+	print(a)
 	messages = pagination.items
 
 	return render_template('blog/index.html', post=last, pagination=pagination, messages=messages, form=form)
@@ -107,8 +109,5 @@ def search():
 	results = pagination.items
 	return render_template('blog/search.html', q=q, results=results, pagination=pagination, category=category)
 
-@blog_bp.route('/portfolio')
-def show_portfolio():
-	print("xxx")
-	return render_template('portfolio/portfolio.html')
+
 

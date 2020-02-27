@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-12">
             {{ dropzone.create(action='admin.upload') }}
-            <p>* Please upload '*.md/*.txt'. All of documents must be utf-8 format.</p>
+            <p>* Please upload '*.md/*.txt or image'. All of documents must be utf-8 format.</p>
             <a class="btn btn-light float-right" href="{{ url_for('blog.index') }}">
                 Done
             </a>

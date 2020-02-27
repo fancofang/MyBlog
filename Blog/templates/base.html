@@ -8,8 +8,7 @@
         <title>{% block title %} ? {% endblock %} - Fanco study room</title>
         <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
         {% block styles %}
-            <link rel="stylesheet"
-                  href="{{ url_for('static', filename='css/perfect_blue.min.css') }}" type="text/css">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/perfect_blue.min.css') }}" type="text/css">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/github.css') }}" type="text/css">
@@ -30,7 +29,6 @@
                 <ul class="navbar-nav mr-auto">
                     {{ render_nav_item('blog.index', 'Home') }}
                     {{ render_nav_item('blog.blogs', 'Blog') }}
-                    {{ render_nav_item('blog.show_portfolio', 'Portfolio') }}
                     {% if current_user.is_authenticated %}
                         {{ render_nav_item('admin.upload', 'Upload') }}
                     {% endif %}
@@ -49,7 +47,7 @@
                                     <a class="dropdown-item" href="{{ url_for('admin.new_post') }}">New Post</a>
                                     <a class="dropdown-item" href="{{ url_for('admin.manage_post') }}">Post</a>
                                     <a class="dropdown-item" href="{{ url_for('admin.manage_category') }}">Category</a>
-                                    <a class="dropdown-item" href="{{ url_for('admin.manage_comment') }}">Comment
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_comment') }}">Comment</a>
                                     <a class="dropdown-item" href="{{ url_for('admin.manage_message') }}">Message
                                         {% if unread_comments %}
                                             <span class="badge badge-success">{{ unread_comments }}</span>

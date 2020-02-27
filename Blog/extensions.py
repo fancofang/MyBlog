@@ -10,6 +10,7 @@ from flask_pagedown import PageDown
 from flask_dropzone import Dropzone
 from flask_migrate import Migrate
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_ckeditor import CKEditor
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -22,6 +23,7 @@ pagedown = PageDown()
 dropzone = Dropzone()
 migrate = Migrate()
 toolbar = DebugToolbarExtension()
+ckeditor = CKEditor()
 
 
 

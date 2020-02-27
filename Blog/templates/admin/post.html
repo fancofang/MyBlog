@@ -9,12 +9,13 @@
         <h1>{% if form.title.data %} Edit {% else %} New {% endif %}Post</h1>
     </div>
     {{ render_form(form) }}
+
 {% endblock %}
 
 
 {% block scripts %}
 {{ super() }}
-{{ pagedown.include_pagedown() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
 {% endblock %}
 
 

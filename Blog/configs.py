@@ -37,11 +37,13 @@ class BaseConfig(object):
     MAX_CONTENT_LENGTH = 3 * 1024 * 1024
 
     FILE_UPLOAD_PATH = os.path.join(basedir, 'uploads')
+    IMAGE_UPLOAD_PATH = os.path.join(basedir, 'uploads/images')
     DROPZONE_ALLOWED_FILE_CUSTOM = True
-    DROPZONE_ALLOWED_FILE_TYPE = '.md, .txt'
+    DROPZONE_ALLOWED_FILE_TYPE = 'image/*, .md, .txt'
     DROPZONE_MAX_FILE_SIZE = 3
     DROPZONE_MAX_FILES = 5
     DROPZONE_ENABLE_CSRF = True
+    DROPZONE_DEFAULT_MESSAGE = ' Drop files here<br>Or<br><button type="button">Click to Upload</button>'
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
