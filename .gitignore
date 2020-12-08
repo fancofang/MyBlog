@@ -105,9 +105,12 @@ venv.bak/
 
 # Development
 *.db
-.idea
+.idea/*
 logs/*
 !logs/.gitkeep
+whooshee/*
+migrations/*
+
+# Documents
 uploads/*
 !uploads/.gitkeep
-whooshee/*

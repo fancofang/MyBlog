@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %}Confirm{% endblock %}
+
+{% block content %}
+    <div class="container h-100">
+        <div class="row h-100 page-header justify-content-center align-items-center">
+            {% if confirm %}
+            <div class="col-sm-8">
+                <h1>Your account have been confirm.</h1>
+                <a href="{{ url_for('index.index') }}">go to index</a>
+
+            </div>
+            {% else %}
+            <div class="col-sm-8">
+                <h1>Please check your email and click the link to confirm your account.</h1>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

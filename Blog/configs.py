@@ -22,11 +22,11 @@ class BaseConfig(object):
     MAIL_USE_TSL = True
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = ('Fanco', 'noreply@blog.fanco.ink')
+    MAIL_DEFAULT_SENDER = os.getenv('DEFAULT_SENDER')
     MAIL_SUBJECT_PREFIX = '[Fanco`s study room]'
+    
     ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')
 
-    BLOG_ADMIN_EMAIL = 'admin@example.com'
     BLOG_POST_PER_PAGE = 10
     BLOG_MANAGE_POST_PER_PAGE = 15
     BLOG_COMMENT_PER_PAGE = 15

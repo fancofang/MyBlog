@@ -1,0 +1,16 @@
+<div class="list-group-item list-group-item-action flex-column">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1 text-success">{{ message.name }}
+        </h5>
+        <small data-toggle="tooltip" data-placement="top"
+               data-timestamp="{{ message.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}"
+               data-delay="100">
+            {{ moment(message.timestamp).fromNow(refresh=True) }}
+        </small>
+    </div>
+    <p class="mb-1">{{ message.body }}</p>
+</div>
+
+{% block scripts %}
+{{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
+{% endblock %}

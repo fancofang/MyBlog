@@ -6,7 +6,7 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_whooshee import Whooshee
-from flask_pagedown import PageDown
+# from flask_pagedown import PageDown
 from flask_dropzone import Dropzone
 from flask_migrate import Migrate
 from flask_debugtoolbar import DebugToolbarExtension
@@ -19,7 +19,7 @@ csrf = CSRFProtect()
 mail = Mail()
 moment = Moment()
 whooshee = Whooshee()
-pagedown = PageDown()
+# pagedown = PageDown()
 dropzone = Dropzone()
 migrate = Migrate()
 toolbar = DebugToolbarExtension()

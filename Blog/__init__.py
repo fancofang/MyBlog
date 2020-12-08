@@ -4,10 +4,11 @@ import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask import Flask,render_template, request
 from flask_wtf.csrf import CSRFError
+from Blog.blueprints.index import index_bp
 from Blog.blueprints.auth import auth_bp
 from Blog.blueprints.blog import blog_bp
 from Blog.blueprints.admin import admin_bp
-from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, pagedown, dropzone, migrate, toolbar, ckeditor
+from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, dropzone, migrate, toolbar, ckeditor
 from Blog.models import User, Post, Category, Comment, Permission, Role
 from Blog.configs import config
 
@@ -19,7 +20,7 @@ def create_app(config_name=None):
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'development')
 
-    app = Flask('Blog')
+    app = Flask(__name__)
     app.config.from_object(config[config_name])
 
     register_extensions(app)
@@ -32,10 +33,10 @@ def create_app(config_name=None):
     return app
 
 def register_blueprints(app):
+    app.register_blueprint(index_bp)
     app.register_blueprint(blog_bp)
-    app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(admin_bp, url_prefix='/manage')
     app.register_blueprint(auth_bp, url_prefix='/auth')
-
 
 def register_extensions(app):
     bootstrap.init_app(app)
@@ -45,12 +46,11 @@ def register_extensions(app):
     mail.init_app(app)
     moment.init_app(app)
     whooshee.init_app(app)
-    pagedown.init_app(app)
+    # pagedown.init_app(app)
     dropzone.init_app(app)
     migrate.init_app(app, db)
     toolbar.init_app(app)
     ckeditor.init_app(app)
-
 
 def register_errors(app):
     @app.errorhandler(400)
@@ -75,7 +75,7 @@ def register_errors(app):
 
     @app.errorhandler(CSRFError)
     def handle_csrf_error(e):
-        return render_template('errors/400.html', description=e.description), 400
+        return render_template('errors/400.html', description="login timeout"), 400
 
 def register_shell_context(app):
     @app.shell_context_processor
@@ -101,33 +101,69 @@ def register_commands(app):
         db.create_all()
         click.echo('Initialized database.')
 
+        Role.init_role()
+        click.echo('Initialized the roles and permissions...')
+
     @app.cli.command()
     @click.option('--username', prompt=True, help='The username used to login.')
     @click.option('--password', prompt=True, hide_input=True,
                   confirmation_prompt=True, help='The password used to login.')
-    def init(username, password):
-        """Building Bluelog, just for you."""
+    def initadmin(username, password):
+        """Initialized blog account."""
 
         click.echo('Initializing the database...')
         db.create_all()
+        
+        admin_empty = False
+        admin_role = Role.query.filter_by(name='ADMIN').first()
 
-        click.echo('Initializing the roles and permissions...')
-        Role.init_role()
-
-        admin = User.query.first()
-
-        if admin is not None:
-            click.echo('The administrator already exists, updating...')
-            admin.username = username
-            admin.password = password
-        else:
-            click.echo('Creating the temporary administrator account...')
+        print(admin_role.users.first())
+        if admin_role.users.first() is None:
+            admin_empty = True
+        print("admin_empty:",admin_empty)
+        
+        if admin_empty:
+            email = os.getenv('ADMIN_EMAIL', 'admin@example.com')
+            click.echo('Creating account...')
             admin = User(
-                username='admin',
-                email='admin@example.com'
+                username=username,
+                email=email
             )
             admin.password = password
-            db.session.add(admin)
+            admin_role.users.append(admin)
+            click.echo('Giving email:< %s > a administrator permission...' % admin.email)
+        else:
+            admin = admin_role.users.first()
+            click.echo('The Email < %s > is updating username and password...'% admin.email)
+            admin.username = username
+            admin.password = password
+        db.session.add(admin)
+        #
+        #
+        #
+        #
+        # admin = User.query.filter_by(email=email).first()
+        # print(admin)
+        #
+        # if admin is None:
+        #     # click.echo('The Email < %s > is updating username and password...'% admin.email)
+        #     # admin.username = username
+        #     # admin.password = password
+        #     click.echo('Creating account...')
+        #     admin = User(
+        #         username=username,
+        #         email=email
+        #     )
+        #     admin.password = password
+        #     if admin_empty:
+        #         admin_role.append(admin)
+        #         click.echo('Giving email:< %s > a administrator permission...'% admin.email)
+        #
+        # else:
+        #     click.echo('The Email < %s > is updating username and password...'% admin.email)
+        #     admin.username = username
+        #     admin.password = password
+        # db.session.add(admin)
 
         category = Category.query.first()
         if category is None:
@@ -173,9 +209,6 @@ def register_commands(app):
         fake_messages(message)
 
         click.echo('Done.')
-
-
-
 
 
 def register_logging(app):

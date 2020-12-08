@@ -1,16 +1,16 @@
 {% macro post_card(post) %}
     <div>
-        <h3 class="text-primary"><a href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a></h3>
+        <h3 class="text-primary"><a href="{{ url_for('blog.show_post', param=post.title) }}">{{ post.title }}</a></h3>
         <p>
             {% if post.body_html %}
                 {{ post.body_html | safe |striptags|truncate }}
             {% else %}
                 {{ post.body|striptags|truncate }}
             {% endif %}
-            <small><a href="{{ url_for('.show_post', post_id=post.id) }}">Read More</a></small>
+            <small><a href="{{ url_for('blog.show_post', param=post.title) }}">Read More</a></small>
         </p>
         <small>
-            Comments: <a href="{{ url_for('.show_post', post_id=post.id) }}#comments">{{ post.comments|length }}</a>&nbsp;&nbsp;
+            Comments: <a href="{{ url_for('blog.show_post', param=post.title) }}#comments">{{ post.comments|length }}</a>&nbsp;&nbsp;
             Category: <a href="{{ url_for('.categories', category_id=post.category_id) }}">{{ post.category.name }}</a>&nbsp;&nbsp;
             Time: <a href="#">{{ moment(post.timestamp).format('LL') }}</a>
         </small>

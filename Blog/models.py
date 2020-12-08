@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import current_app
 from flask_login import UserMixin
 from markdown2 import markdown
-import bleach
+import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from Blog.extensions import db, whooshee
@@ -25,12 +25,17 @@ class User(db.Model, UserMixin):
 
 	def __init__(self, **kwargs):
 		super(User, self).__init__(**kwargs)
-		self.set_role()
+		self.init_role()
 		self.set_image()
+		self.set_random_pass()
 
 	@property
 	def is_admin(self):
-		return self.role.name == 'Administrator'
+		return self.role.name == 'ADMIN'
+	
+	@property
+	def is_guest(self):
+		return self.role.name == 'GUEST'
 
 	@property
 	def password(self):
@@ -40,27 +45,39 @@ class User(db.Model, UserMixin):
 	def password(self, password):
 		self.password_hash = generate_password_hash(password)
 
-	@staticmethod
-	def init_role_permission():
-		for user in User.query.all():
-			if user.role is None:
-				if user.email == current_app.config['BLOG_ADMIN_EMAIL']:
-					user.role = Role.query.filter_by(name='Administrator').first()
-				else:
-					user.role = Role.query.filter_by(name='User').first()
-			db.session.add(user)
-		db.session.commit()
+	# @staticmethod
+	# def init_role_permission():
+	# 	for user in User.query.all():
+	# 		if user.role is None:
+	# 			if user.email == current_app.config['ADMIN_EMAIL']:
+	# 				user.role = Role.query.filter_by(name='ADMIN').first()
+	# 			else:
+	# 				user.role = Role.query.filter_by(name='GUEST').first()
+	# 		db.session.add(user)
+	# 	db.session.commit()
 
 	def validate_password(self, password):
 		return check_password_hash(self.password_hash, password)
+	
+	def set_random_pass(self):
+		s = [ random.choice('abcdefghijklmnopqrstuvwxyz!@#$%^&*()') for i in range(8)]
+		self.password = "".join(s)
+		db.session.commit()
 
-	def set_role(self):
+	def init_role(self):
 		if self.role is None:
-			if self.email == current_app.config['BLOG_ADMIN_EMAIL']:
-				self.role = Role.query.filter_by(name='Administrator').first()
+			if self.email == current_app.config['ADMIN_EMAIL']:
+				self.role = Role.query.filter_by(name='ADMIN').first()
 			else:
-				self.role = Role.query.filter_by(name='User').first()
+				self.role = Role.query.filter_by(name='GUEST').first()
 			db.session.commit()
+			
+	def set_role(self, name):
+		if self.role.name != name.upper():
+			self.role = Role.query.filter_by(name=name).first()
+			db.session.commit()
+			return True
+		return False
 
 	def set_image(self):
 		if self.image is None:
@@ -101,8 +118,9 @@ class Role(db.Model):
 			# 'User': ['FOLLOW', 'COLLECT', 'COMMENT', 'UPLOAD'],
 			# 'Moderator': ['FOLLOW', 'COLLECT', 'COMMENT', 'UPLOAD', 'MODERATE'],
 			# 'Administrator': ['FOLLOW', 'COLLECT', 'COMMENT', 'UPLOAD', 'MODERATE', 'ADMINISTER']
-			'User': ['COMMENT'],
-			'Administrator': ['COMMENT', 'ADMINISTER']
+			'GUEST':[],
+			'USER': ['COMMENT'],
+			'ADMIN': ['COMMENT', 'ADMINISTER']
 		}
 		for role_name in roles_permissions_map:
 			role = Role.query.filter_by(name=role_name).first()
@@ -183,8 +201,10 @@ class Comment(db.Model):
 	post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
 	replied_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
-	replies = db.relationship('Comment', back_populates='replied', cascade='all')
+	# replies = db.relationship('Comment', back_populates='replied', cascade='all')
+	replies = db.relationship('Comment', back_populates='replied')
 	replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
+	
 
 class Message(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

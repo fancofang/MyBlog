@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{ loop.index + ((pagination.page - 1) * config['BLOG_COMMENT_PER_PAGE']) }}</td>
                     <td>{{ comment.author.username }}</td>
-                    <td><a href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">{{ comment.post.title }}</a></td>
+                    <td><a href="{{ url_for('blog.show_post', param=comment.post.title) }}">{{ comment.post.title }}</a></td>
                     <td>{{ comment.body }}</td>
                     <td>{{ moment(comment.timestamp).format('LL') }}</td>
                     <td>
