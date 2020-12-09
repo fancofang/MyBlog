@@ -138,32 +138,6 @@ def register_commands(app):
             admin.username = username
             admin.password = password
         db.session.add(admin)
-        #
-        #
-        #
-        #
-        # admin = User.query.filter_by(email=email).first()
-        # print(admin)
-        #
-        # if admin is None:
-        #     # click.echo('The Email < %s > is updating username and password...'% admin.email)
-        #     # admin.username = username
-        #     # admin.password = password
-        #     click.echo('Creating account...')
-        #     admin = User(
-        #         username=username,
-        #         email=email
-        #     )
-        #     admin.password = password
-        #     if admin_empty:
-        #         admin_role.append(admin)
-        #         click.echo('Giving email:< %s > a administrator permission...'% admin.email)
-        #
-        # else:
-        #     click.echo('The Email < %s > is updating username and password...'% admin.email)
-        #     admin.username = username
-        #     admin.password = password
-        # db.session.add(admin)
 
         category = Category.query.first()
         if category is None:
@@ -223,22 +197,24 @@ def register_logging(app):
         '[%(asctime)s] %(remote_addr)s requested %(url)s\n'
         '%(levelname)s in %(module)s: %(message)s'
     )
-
+    
+    # If get the error recode, send email to admin email.
+    mail_handler = SMTPHandler(
+        mailhost=app.config['MAIL_SERVER'],
+        fromaddr=app.config['MAIL_USERNAME'],
+        toaddrs=app.config['ADMIN_EMAIL'],
+        subject='Application Error',
+        credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']))
+    mail_handler.setLevel(logging.ERROR)
+    mail_handler.setFormatter(request_formatter)
+    
+    # File recode warning error
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     file_handler = RotatingFileHandler(os.path.join(basedir, 'logs/Blog.log'),
                                        maxBytes=10 * 1024 * 1024, backupCount=10)
     file_handler.setFormatter(formatter)
-    file_handler.setLevel(logging.INFO)
-
-    mail_handler = SMTPHandler(
-        mailhost=app.config['MAIL_SERVER'],
-        fromaddr=app.config['MAIL_USERNAME'],
-        toaddrs=app.config['ADMIN_EMAIL'],
-        subject='fancoblog Application Error',
-        credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']))
-    mail_handler.setLevel(logging.ERROR)
-    mail_handler.setFormatter(request_formatter)
+    file_handler.setLevel(logging.WARNING)
 
     if not app.debug:
         app.logger.addHandler(mail_handler)

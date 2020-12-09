@@ -41,14 +41,14 @@
         </div>
 
         <hr>
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".postLinkModal">Share</button>
-        <div class="modal fade postLinkModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#postLinkModal">Share</button>
+        <div class="modal fade" id="postLinkModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Permalink</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <h5 class="modal-title" id="mySmallModalLabel">Share link</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>

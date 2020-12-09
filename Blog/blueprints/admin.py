@@ -1,12 +1,10 @@
 import os
-from datetime import datetime
 from flask import Blueprint, flash, render_template, url_for, redirect, request, current_app
-from flask.views import MethodView
 from flask_login import login_required, current_user
 from Blog.form import PostForm, CategoryForm, SettingForm
 from Blog.models import Category, Post, Comment, Message, User
 from Blog.extensions import db
-from Blog.utils import redirect_back, permission_required, rename_image
+from Blog.utils import redirect_back, permission_required
 
 admin_bp = Blueprint('admin',__name__)
 
@@ -48,7 +46,7 @@ def get_post(param):
 	item = Post.query.filter_by(title=param).first_or_404()
 	if item:
 		form.title.data = item.title
-		form.body.data = item.body
+		form.body.data = item.body_html
 		form.category.data = item.category_id
 		return render_template('admin/post.html', form=form, post=item)
 	return render_template('admin/post.html', form=form)
@@ -187,21 +185,16 @@ def upload():
 		filetype = filename.split('.', 1)[1]
 		if filetype in ['md','txt']:
 			path = os.path.join(current_app.config['FILE_UPLOAD_PATH'], filename)
+		
 		else:
 			path = os.path.join(current_app.config['IMAGE_UPLOAD_PATH'], filename)
 		f.save(path)
 		if filetype in ['md','txt']:
 			with open(path, 'r', encoding='UTF-8', errors='ignore') as essay:
 				s = essay.read()
+				print(s)
 				title = filename.split('.', 1)[0]
 				new_post = Post(title=title,body=s)
 				db.session.add(new_post)
 				db.session.commit()
-				print(s)
-				print(title)
-				print('successful!!!!!')
-			# if Post.query.filter_by(title='title'):
-			# 	print("ggggggggggg")
-			# else:
-			# 	print("xxxxxxxx")
 	return render_template('admin/upload.html')

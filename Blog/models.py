@@ -185,8 +185,6 @@ class Post(db.Model):
 		# 	tags=allowed_tags, strip=True))
 		target.body_html = markdown(value,extras=["tables","fenced-code-blocks","code-color"])
 
-
-
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 @whooshee.register_model('body')
