@@ -23,9 +23,9 @@ def login():
         if user is not None and user.validate_password(form.password.data):
             remember = form.remember.data
             print(user.role.name)
-            if user.role.name == "GUEST":
-                return redirect(url_for('auth.confirm_account'), token=None)
             login_user(user, remember)
+            if not user.confirmed:
+                return redirect(url_for('auth.unconfirmed'))
             flash('Login success.', 'info')
             return redirect_back()
         flash('Invalid email or password.', 'warning')
@@ -50,13 +50,12 @@ def register():
         password = form.password.data
         user = User(email=email, username=username)
         user.password=password
+        token = generate_token(user=user, operation=Operations.CONFIRM)
         db.session.add(user)
         db.session.commit()
-        token = generate_token(user=user, operation=Operations.CONFIRM)
         send_confirm_email(user=user, token=token)
-        flash('You register sucessfully.', 'info')
-        # return redirect(url_for('index.index'))
-        return render_template('auth/confirm.html')
+        flash('Register sucessfully. Please check your email and click the link to confirm your account.', 'info')
+        return redirect(url_for('index.index'))
     return render_template('auth/register.html', form=form)
 
 
@@ -70,7 +69,6 @@ def forget_password():
         user = User.query.filter_by(email=form.email.data.lower()).first()
         if user:
             token = generate_token(user=user, operation=Operations.RESET_PASSWORD)
-            print(token)
             send_reset_password_email(user=user, token=token)
             flash('Password reset email sent, check your inbox.', 'info')
             return redirect(url_for('.login'))
@@ -92,16 +90,30 @@ def reset_password(token):
         if validate_token(token=token, operation=Operations.RESET_PASSWORD,
                           new_password=form.password.data):
             flash('Password updated.', 'success')
-            return redirect(url_for('.login'))
+            return redirect(url_for('auth.login'))
         else:
             flash('Invalid or expired link.', 'danger')
-            return redirect(url_for('.forget_password'))
+            return redirect(url_for('auth.forget_password'))
     return render_template('auth/reset_password.html', form=form)
+
 
 @auth_bp.route('/confirm/<token>')
 def confirm_account(token):
-    print("enter confirm")
-    if validate_token(token=token, operation=Operations.CONFIRM):
-        # return redirect(url_for('index.index'))
-        return render_template('auth/confirm.html', confirm=True)
-    return render_template('auth/confirm.html')
+    message = validate_token(token=token, operation=Operations.CONFIRM)
+    return render_template('auth/confirm.html',  message=message)
+
+
+@auth_bp.route('/unconfirmed')
+@login_required
+def unconfirmed():
+    if current_user.confirmed:
+        return redirect(url_for('index.index'))
+    # flash('Please confirm your account!', 'waring')
+    return render_template('auth/unconfirmed.html', user=current_user)
+
+@auth_bp.route('/resend')
+def resend_confirmation():
+    user = User.query.filter_by(email=current_user.email).first()
+    token = generate_token(user=user, operation=Operations.CONFIRM)
+    send_confirm_email(user=user, token=token)
+    return redirect(url_for("auth.unconfirmed"))

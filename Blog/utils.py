@@ -40,6 +40,8 @@ def generate_token(user, operation, expire_in=3600, **kwargs):
 
     data = {'id': user.id, 'operation': operation}
     data.update(**kwargs)
+    user.token = s.dumps(data).decode('utf-8')
+    db.session.commit()
     return s.dumps(data)
 
 
@@ -49,23 +51,25 @@ def validate_token(token, operation, new_password=None):
     try:
         data = s.loads(token)
         user = User.query.filter_by(id=data.get('id')).first()
-    except (SignatureExpired, BadSignature):
-        return False
+    except (SignatureExpired, BadSignature) as e:
+        return "Token expired or does not match"
+    
+    if  user.token != token:
+        return "Token was used."
 
-    if operation != data.get('operation') and not user:
-        return False
-
-    if operation == Operations.RESET_PASSWORD:
-        user.password=new_password
-        db.session.commit()
-        return True
-    if operation == Operations.CONFIRM:
-        if user.role.name != "GUEST":
+    if operation == data.get('operation') and user:
+        if operation == Operations.RESET_PASSWORD:
+            user.password=new_password
+            db.session.commit()
             return True
-        else:
+        elif operation == Operations.CONFIRM:
             user.set_role('USER')
-            login_user(user)
-            return True
+            user.confirmed = True
+            user.token = ""
+            db.session.commit()
+            return "Email confirmed sucessfully"
+    else:
+        return "Something wrong. Please do it again"
 
 def permission_required(permission_name):
     def decorator(func):

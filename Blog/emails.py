@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import requests
+import os
 from threading import Thread
 
 from flask import current_app, render_template
@@ -10,9 +10,9 @@ from Blog.extensions import mail
 
 def _send_async_mail(app, message):
     print("sending email")
-    print(app.config['MAIL_SERVER'])
     with app.app_context():
         mail.send(message)
+
 
 
 def send_mail(to, subject, template, **kwargs):

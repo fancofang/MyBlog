@@ -1,4 +1,6 @@
 import os
+import re
+
 import click
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
@@ -30,6 +32,7 @@ def create_app(config_name=None):
     register_template_context(app)
     register_blueprints(app)
     register_logging(app)
+    register_jinja_filter(app)
     return app
 
 def register_blueprints(app):
@@ -81,6 +84,15 @@ def register_shell_context(app):
     @app.shell_context_processor
     def make_shell_context():
         return dict(db=db, User=User, Post=Post, Category=Category, Comment=Comment, Permission=Permission, Role=Role)
+
+def register_jinja_filter(app):
+    @app.template_filter('replace_domain')
+    def replace_domain(old, new):
+        # pattern = re.compile(r'(\d+(\.\d+){3}:\d+)')
+        return re.sub(r'(\d+(\.\d+){3}:\d+)', new, old)
+        
+
+
 
 def register_template_context(app):
     @app.context_processor

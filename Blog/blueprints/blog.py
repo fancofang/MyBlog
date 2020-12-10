@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, current_app, flash, redirect, url_for, session, jsonify
-from flask_login import current_user
+from flask_login import current_user, login_required, login_user
 from Blog.models import Post, Category, Comment, User
 from Blog.utils import redirect_back
 from Blog.extensions import db
-from Blog.form import CommentForm, CommentFormHiddenEmail
+from Blog.form import CommentForm, CommentFormHidden
 from Blog.emails import send_someone_connect_email
 
 blog_bp = Blueprint('blog', __name__)
@@ -25,32 +25,6 @@ def categories(category_id):
     posts = pagination.items
     return render_template('blog/category.html', pagination=pagination, posts=posts, category=category)
 
-# @blog_bp.route('/post/<param>', methods=['GET', 'POST'])
-# def show_post(param):
-#     post = Post.query.filter_by(title=param).first_or_404()
-#     page = request.args.get('page', 1, type=int)
-#     per_page = current_app.config['BLOG_POST_PER_PAGE']
-#     comment_pagination = Comment.query.filter_by(post_id=post.id).order_by(Comment.timestamp.desc()).paginate(
-#         page, per_page)
-#     comments = comment_pagination.items
-#     form = CommentForm()
-#     if form.validate_on_submit():
-#         if current_user.is_authenticated:
-#             body = form.body.data
-#             author = current_user
-#             comment = Comment(body=body, post=post, author= author)
-#             replied_id = request.args.get('reply')
-#             if replied_id:
-#                 replied_comment = Comment.query.get_or_404(replied_id)
-#                 comment.replied = replied_comment
-#             db.session.add(comment)
-#             db.session.commit()
-#             return redirect(url_for('blog.show_post', param=param))
-#         else:
-#             flash('Please login first.', 'warning')
-#             return redirect(url_for('auth.login'))
-#     return render_template('blog/post.html', pagination=comment_pagination, post=post, comments=comments, form=form)
-
 @blog_bp.route('/post/<param>', methods=['GET'])
 def show_post(param):
     post = Post.query.filter_by(title=param).first_or_404()
@@ -59,8 +33,8 @@ def show_post(param):
     comment_pagination = Comment.query.filter_by(post_id=post.id).order_by(Comment.timestamp.desc()).paginate(
         page, per_page)
     comments = comment_pagination.items
-    if current_user.is_authenticated or 'browser_email' in session:
-        form = CommentFormHiddenEmail()
+    if not current_user.is_anonymous or 'browser_email' in session:
+        form = CommentFormHidden()
         form.email.data = current_user.email if not current_user.is_anonymous else session['browser_email']
     else:
         form = CommentForm()
@@ -73,27 +47,29 @@ def show_post(param):
 @blog_bp.route('/post/<param>/comment', methods=['POST'])
 def leave_comment(param):
     post = Post.query.filter_by(title=param).first_or_404()
-    if request.method == 'POST':
-        email = request.form.get('email',None)
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            author = request.form.get('name', None)
-            user = User(username=author, email=email)
-        else:
-            author = user.username
-        body = request.form.get('body', None)
-        comment = Comment(body=body, post=post, author_id=user.id)
-        db.session.add(comment)
-        replied_id = request.form.get('be_reply',None)
-        if replied_id:
-            replied_comment = Comment.query.get_or_404(replied_id)
-            comment.replied = replied_comment
-        if request.form.get('remember',None):
-            session['browser_email'] = email
-            session['browser_user'] = author
-        db.session.commit()
-        return redirect(url_for('blog.show_post', param=post.title) + '#comments')
-    # return render_template('blog/post.html', post=post, comments=comments, form=form)
+    email = request.form.get('email', None)
+    user = User.query.filter_by(email=email).first()
+    if user and not user.confirmed:
+        login_user(user)
+        session.pop('browser_email',None)
+        return redirect(url_for("auth.unconfirmed"))
+    if not user:
+        author = request.form.get('name', None)
+        user = User(username=author, email=email)
+    else:
+        author = user.username
+    body = request.form.get('body', None)
+    comment = Comment(body=body, post=post, author_id=user.id)
+    db.session.add(comment)
+    replied_id = request.form.get('be_reply', None)
+    if replied_id:
+        replied_comment = Comment.query.get_or_404(replied_id)
+        comment.replied = replied_comment
+    if request.form.get('remember', None):
+        session['browser_email'] = email
+        session['browser_user'] = author
+    db.session.commit()
+    return redirect(url_for('blog.show_post', param=post.title) + '#comments')
 
 
 @blog_bp.route('/reply')

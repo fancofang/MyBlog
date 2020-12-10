@@ -1,5 +1,5 @@
 import hashlib
-from datetime import datetime
+from datetime import date,datetime
 from flask import current_app
 from flask_login import UserMixin
 from markdown2 import markdown
@@ -17,8 +17,9 @@ class User(db.Model, UserMixin):
 	username = db.Column(db.String(20), unique=True, index=True)
 	password_hash = db.Column(db.String(128))
 	image = db.Column(db.String(128))
+	confirmed = db.Column(db.Boolean, default=False)
+	token = db.Column(db.String(128))
 	create_at = db.Column(db.DateTime, default=datetime.utcnow)
-	last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
 	role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 	comments = db.relationship('Comment', backref='author')
@@ -68,6 +69,7 @@ class User(db.Model, UserMixin):
 		if self.role is None:
 			if self.email == current_app.config['ADMIN_EMAIL']:
 				self.role = Role.query.filter_by(name='ADMIN').first()
+				self.confirmed = True
 			else:
 				self.role = Role.query.filter_by(name='GUEST').first()
 			db.session.commit()
@@ -160,7 +162,7 @@ class Post(db.Model):
 	title = db.Column(db.String(60))
 	body = db.Column(db.Text)
 	body_html = db.Column(db.Text)
-	timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+	timestamp = db.Column(db.Date, default=date.today, index=True)
 	can_comment = db.Column(db.Boolean, default=True)
 
 	category_id = db.Column(db.Integer, db.ForeignKey('categorys.id'))

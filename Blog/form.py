@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, ValidationError, TextAreaField, \
-	HiddenField, DateTimeField
+	HiddenField, DateField
 from flask_pagedown.fields import PageDownField
 from wtforms.validators import DataRequired,Length, Email, Regexp, EqualTo, Optional
 from Blog.models import Category, User
@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
 	title = StringField('Title', validators=[DataRequired(), Length(1.128)])
-	uploadtime = DateTimeField('Uploadtime(Just valid on edit)', render_kw={'placeholder':"%Y-%m-%d %H:%M:%S"},validators=[Optional()])
+	uploadtime = DateField('Uploadtime(Just valid on edit)', render_kw={'placeholder':"eg:1970-1-30"},validators=[Optional()])
 	category = SelectField('Category', coerce=int, default=1)
 	# body = PageDownField('Body', validators=[DataRequired()])
 	body = CKEditorField('Body', validators=[DataRequired()])
@@ -41,13 +41,12 @@ class CommentForm(FlaskForm):
 	be_reply = HiddenField('Replied')
 	submit = SubmitField('Submit')
 	
-class CommentFormHiddenEmail(FlaskForm):
-	name = StringField('Nickname', validators=[DataRequired(), Length(1,20)])
+class CommentFormHidden(FlaskForm):
+	name = HiddenField('Nickname', validators=[DataRequired(), Length(1,20)])
 	email = HiddenField("Email", validators=[DataRequired(), Length(1, 254), Email()])
 	body = TextAreaField('Comment', validators=[DataRequired()])
 	be_reply = HiddenField('Replied')
 	submit = SubmitField('Submit')
-	
 
 class RegisterForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Length(1, 254), Email()])
@@ -90,5 +89,4 @@ class SettingForm(FlaskForm):
 	image = StringField('Upload icon',validators=[Optional()])
 	password = PasswordField('Password', render_kw={'placeholder':"如空白则默认不修改密码"}, validators=[Optional(), Length(8, 128), EqualTo('password2')])
 	password2 = PasswordField('Confirm password', render_kw={'placeholder':"如空白则默认不修改密码"})
-
 	submit = SubmitField()

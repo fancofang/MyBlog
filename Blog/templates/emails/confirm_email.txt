@@ -4,7 +4,7 @@ Please click the link below to finish register.
 
 Here is your account confirm link:
 
-{{ url_for('auth.confirm_account', token=token, _external=True) }}
+{{ url_for('auth.confirm_account', token=token, _external=True) | replace_domain('fanco.ink')   }}
 
 
 (Please do not reply to this notification, this inbox is not monitored.)
