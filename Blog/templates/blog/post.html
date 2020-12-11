@@ -55,7 +55,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <input type="text" class="form-control"
-                                   value="{{ url_for('blog.show_post', param=post.title, _external=True) }}" readonly>
+                                   value="{{ url_for('blog.show_post', param=post.title, _external=True) | replace_domain('fanco.ink') }}" readonly>
                         </div>
                     </div>
                 </div>
