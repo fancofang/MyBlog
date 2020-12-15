@@ -59,7 +59,8 @@ def edit_post(param):
 		item.title = form.title.data
 		item.category = Category.query.get(form.category.data)
 		item.body = form.body.data
-		item.timestamp = form.uploadtime.data if form.uploadtime.data else None
+		if request.form.get('uploadtime'):
+			item.timestamp = form.uploadtime.data
 		db.session.commit()
 		flash('Post is updated.', 'success')
 		return redirect(url_for('blog.show_post', param=item.title))
