@@ -3,7 +3,9 @@ from flask.blueprints import Blueprint
 from Blog.models import Post, Message
 from Blog.form import HelloForm
 from Blog.extensions import db, csrf
-
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
 index_bp = Blueprint('index',__name__)
 
 

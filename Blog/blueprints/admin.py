@@ -56,14 +56,15 @@ def edit_post(param):
 	form = PostForm()
 	item = Post.query.filter_by(title=param).first_or_404()
 	if form.validate_on_submit() and item:
-		item.title = form.title.data
-		item.category = Category.query.get(form.category.data)
-		item.body = form.body.data
-		if request.form.get('uploadtime'):
-			item.timestamp = form.uploadtime.data
-		db.session.commit()
-		flash('Post is updated.', 'success')
-		return redirect(url_for('blog.show_post', param=item.title))
+		if form.submit.data:
+			item.title = form.title.data
+			item.category = Category.query.get(form.category.data)
+			item.body = form.body.data
+			if request.form.get('uploadtime'):
+				item.timestamp = form.uploadtime.data
+			db.session.commit()
+			flash('Post is updated.', 'success')
+	return redirect(url_for('blog.show_post', param=item.title))
 
 @admin_bp.route('/post/<param>?_method=DELETE', methods=['POST'])
 def delete_post(param):

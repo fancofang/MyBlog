@@ -10,7 +10,8 @@ from Blog.blueprints.index import index_bp
 from Blog.blueprints.auth import auth_bp
 from Blog.blueprints.blog import blog_bp
 from Blog.blueprints.admin import admin_bp
-from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, dropzone, migrate, toolbar, ckeditor
+from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, dropzone, migrate, toolbar, \
+    ckeditor
 from Blog.models import User, Post, Category, Comment, Permission, Role
 from Blog.configs import config
 

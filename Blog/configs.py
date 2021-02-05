@@ -49,6 +49,9 @@ class BaseConfig(object):
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
+    CKEDITOR_SERVE_LOCAL = True
+    CKEDITOR_PKG_TYPE ="full"
+
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')
 

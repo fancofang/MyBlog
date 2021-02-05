@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
 
 
 {% block title %}{% if form.title.data %} Edit {% else %} New {% endif %}Post{% endblock %}
+
 
 {% block content %}
     <div class="page-header">
@@ -10,12 +11,9 @@
     </div>
     {{ render_form(form) }}
 
-{% endblock %}
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='body',custom_config="uiColor: '#9AB8F3',allowedContent: true") }}
 
-
-{% block scripts %}
-{{ super() }}
-    <script type="text/javascript" src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
 {% endblock %}
 
 
