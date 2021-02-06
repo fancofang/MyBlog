@@ -16,7 +16,7 @@ class PostForm(FlaskForm):
 	title = StringField('Title', validators=[DataRequired(), Length(1.128)])
 	uploadtime = DateField('Uploadtime(Just valid on edit)', render_kw={'placeholder':"eg:1970-1-30"},validators=[Optional()])
 	category = SelectField('Category', coerce=int, default=1)
-	body = TextAreaField('Body', validators=[DataRequired()])
+	body = PageDownField('Body')
 	submit = SubmitField('Submit')
 	cancel = SubmitField('Cancel')
 

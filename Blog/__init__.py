@@ -11,7 +11,7 @@ from Blog.blueprints.auth import auth_bp
 from Blog.blueprints.blog import blog_bp
 from Blog.blueprints.admin import admin_bp
 from Blog.extensions import db, bootstrap, login_manager, csrf, mail, moment, whooshee, dropzone, migrate, toolbar, \
-    ckeditor
+    ckeditor, pagedown
 from Blog.models import User, Post, Category, Comment, Permission, Role
 from Blog.configs import config
 
@@ -50,7 +50,7 @@ def register_extensions(app):
     mail.init_app(app)
     moment.init_app(app)
     whooshee.init_app(app)
-    # pagedown.init_app(app)
+    pagedown.init_app(app)
     dropzone.init_app(app)
     migrate.init_app(app, db)
     toolbar.init_app(app)

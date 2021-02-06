@@ -4,15 +4,38 @@
 
 {% block title %}{% if form.title.data %} Edit {% else %} New {% endif %}Post{% endblock %}
 
+{% block styles %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/native.css') }}" type="text/css">
+<style>
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 45px;
+	}
+
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+</style>
+{% endblock %}
 
 {% block content %}
     <div class="page-header">
         <h1>{% if form.title.data %} Edit {% else %} New {% endif %}Post</h1>
     </div>
-    {{ render_form(form) }}
+<div class="markdown-body">
+        {{ render_form(form) }}
+</div>
 
-    {{ ckeditor.load() }}
-    {{ ckeditor.config(name='body',custom_config="uiColor: '#9AB8F3',allowedContent: true") }}
+<!--    {{ ckeditor.load() }}-->
+<!--    {{ ckeditor.config(name='body',custom_config="uiColor: '#9AB8F3', enterMode: CKEDITOR.ENTER_BR") }}-->
 
 {% endblock %}
 

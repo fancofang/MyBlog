@@ -194,7 +194,6 @@ class Post(db.Model):
         target.body_html = markdown(value, extras=["tables", "fenced-code-blocks", "toc", "cuddled-lists", "pyshell",
                                                    "break-on-newline", "strike"])
         target.toc_html = target.body_html.toc_html
-        print(target.toc_html)
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)

@@ -46,7 +46,7 @@ def get_post(param):
 	item = Post.query.filter_by(title=param).first_or_404()
 	if item:
 		form.title.data = item.title
-		form.body.data = item.body_html
+		form.body.data = item.body
 		form.category.data = item.category_id
 		return render_template('admin/post.html', form=form, post=item)
 	return render_template('admin/post.html', form=form)
